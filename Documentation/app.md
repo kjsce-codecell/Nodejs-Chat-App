@@ -46,9 +46,9 @@ Once you’re there, you must locate the “Token Generation” section. Select 
 
 Below this section is the Webhooks section. Click on “Setup Webhooks” and it will show you a popup window, where you’ll need to fill out the following:
 
-1. Callback URL: 
-2. Verify Token: The string for validation that you already chose from controller/verification.js.
-3. Subscription Fields: Choose messages and messaging_postbacks. If you want to know more about webhook events read this information.
+1. Callback URL 
+2. Verify Token
+3. Subscription Fields
 
 
 
