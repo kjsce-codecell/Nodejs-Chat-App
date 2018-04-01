@@ -28,7 +28,79 @@ The simplest way to create HTTP requests in Node.js is by using the request modu
 ```
 npm install request
 ```
+## Create index.js file 
+##### 1. Dependencies
+```
+const express = require('express')
+const bodyParser = require('body-parser')
+const request = require('request')
+```
+##### 2. Creating an express app
+```
+const app = express()
+app.set('port',(process.env.PORT || 5000));     // instead
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json())
+```
+##### 3. Index route
+```
+app.get('/',function(req,res){
+        res.send("Hi, this is Briefly!");
+})
+```
+##### 4. For Facebook Verification
+```
+app.get('/webhook',function(req,res){
+        if(req.query['hub.verify_token']=="anonymous_shit"){
+                res.send(req.query['hub.challenge'])
+        }
+        res.send("Wrong Token")
+})
+```
+##### 5.  API endpoint to index.js to process messages.
+```
+app.post('/webhook/',function(req,res){
+        let messaging_events = req.body.entry[0].messaging ;
+        for(let i = 0;i < messaging_events.length;i++){
+                let event = messaging_events[i] ;
+                let sender_id = event.sender.id ;
+                if(event.message && event.message.text){
+                        let text = event.message.text ;
+                        sendText(sender_id,"Text echo: " + text.substring(0,100)) ;
 
+                }
+        }
+        res.sendStatus(200) ;
+})
+```
+##### 6. Function to send messages
+```
+function sendText(sender_id,text){
+        let messageData  = {text:text};
+        request({
+                url : "https://graph.facebook.com/v2.6/me/messages",
+                qs : {access_tokon : token}
+                method : "POST",
+                json: {
+                        recipient:{id:sender_id},
+                        message : messageData
+                }
+        },function(error,response,body){
+                if(error){
+                        console.log("sending error") ;
+                }
+                else if(response.body.error){
+                        console.log("response body error") ;
+                }
+        })
+}
+```
+##### 7. Creates server here browsers can connect to using listen method provided by Express:
+```
+app.listen(app.get('port'),function(){
+        console.log("running :port")
+})
+```
 ## Create Facebook Page and App
 
 To create a Facebook bot, we need to two things:
@@ -46,9 +118,14 @@ Once you’re there, you must locate the “Token Generation” section. Select 
 
 Below this section is the Webhooks section. Click on “Setup Webhooks” and it will show you a popup window, where you’ll need to fill out the following:
 
-1. Callback URL 
+1. Callback URL
 2. Verify Token
-3. Subscription Fields
+3. Subscription Fields 
+
+Click “Verify and Save” button.
+
+
+
 
 
 
