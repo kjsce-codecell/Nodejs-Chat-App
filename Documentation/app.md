@@ -95,7 +95,7 @@ function sendText(sender_id,text){
         })
 }
 ```
-##### 7. Creates server here browsers can connect to using listen method provided by Express:
+##### 7. Creates server where browsers can connect to, using listen method provided by Express:
 ```
 app.listen(app.get('port'),function(){
         console.log("running :port")
